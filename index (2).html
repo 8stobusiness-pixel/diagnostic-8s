@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Autodiagnostic 8S — 8S2Business</title>
+<meta name="description" content="Évaluez la maturité de votre entreprise en 5 minutes grâce à la méthode 8S de 8S2Business. Obtenez un diagnostic personnalisé et découvrez vos priorités d'action.">
+<meta property="og:title" content="Autodiagnostic 8S — 8S2Business">
+<meta property="og:description" content="Évaluez la maturité de votre entreprise en 5 minutes. Diagnostic gratuit, résultats immédiats.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & BASE ─────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --teal:#1A9BA1;--teal-d:#0F7A80;--teal-ll:#E6F7F8;--teal-l:#B8E4E6;
+  --gold:#B8913A;--gold-l:#FDF8EE;--gold-d:#8A6820;
+  --dark:#1A1A18;--mid:#5F5E58;--light:#F5F3EE;--white:#FFFFFF;
+  --radius:12px;--radius-sm:8px;--shadow:0 2px 16px rgba(0,0,0,.08);
+  --ff:'DM Sans',system-ui,sans-serif;--ff-serif:'DM Serif Display',Georgia,serif;
+  --transition:all .18s ease;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--ff);color:var(--dark);background:#F7F9F9;min-height:100vh;line-height:1.6}
+
+/* ── LAYOUT ───────────────────────────────────────────────────── */
+.page-wrap{max-width:720px;margin:0 auto;padding:2rem 1.25rem 4rem}
+
+/* ── HERO ─────────────────────────────────────────────────────── */
+.hero{text-align:center;padding:3rem 1rem 2.5rem;background:var(--white);border-radius:var(--radius);border:.5px solid #D4E9EA;margin-bottom:1.5rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--teal),var(--gold))}
+.badge{display:inline-flex;align-items:center;gap:6px;background:var(--teal-ll);color:var(--teal-d);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:1.25rem}
+.hero h1{font-family:var(--ff-serif);font-size:clamp(1.8rem,5vw,2.6rem);font-weight:400;color:var(--dark);line-height:1.2;margin-bottom:.75rem}
+.hero h1 em{color:var(--teal);font-style:italic}
+.hero p{font-size:1.05rem;color:var(--mid);max-width:480px;margin:0 auto 1.5rem;line-height:1.7}
+.hero-meta{display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap}
+.hero-meta span{font-size:13px;color:var(--mid);display:flex;align-items:center;gap:5px}
+.hero-meta svg{width:16px;height:16px;stroke:var(--teal);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+
+/* ── PROGRESS ─────────────────────────────────────────────────── */
+.progress-wrap{margin-bottom:1.5rem}
+.progress-top{display:flex;justify-content:space-between;margin-bottom:.5rem}
+.progress-top span{font-size:13px;color:var(--mid)}
+.progress-top strong{color:var(--teal)}
+.progress-bar{height:5px;background:#D4E9EA;border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));border-radius:3px;transition:width .4s ease}
+
+/* ── STEP CARD ────────────────────────────────────────────────── */
+.step-card{background:var(--white);border-radius:var(--radius);border:.5px solid #D4E9EA;padding:2rem;box-shadow:var(--shadow);display:none}
+.step-card.active{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.step-badge{display:inline-flex;align-items:center;gap:7px;background:var(--teal);color:var(--white);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:1rem}
+.step-badge svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.step-title{font-family:var(--ff-serif);font-size:1.5rem;color:var(--dark);margin-bottom:.35rem}
+.step-sub{font-size:14px;color:var(--mid);margin-bottom:1.75rem;line-height:1.6;border-left:2px solid var(--teal-l);padding-left:.85rem}
+
+/* ── QUESTIONS ────────────────────────────────────────────────── */
+.q-block{margin-bottom:1.5rem}
+.q-block:last-child{margin-bottom:0}
+.q-text{font-size:15px;font-weight:500;color:var(--dark);margin-bottom:.75rem;line-height:1.5}
+.q-num{display:inline-block;width:24px;height:24px;background:var(--teal-ll);color:var(--teal-d);font-size:12px;font-weight:600;border-radius:50%;text-align:center;line-height:24px;margin-right:6px;flex-shrink:0}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;align-items:center;gap:10px;padding:.7rem 1rem;border-radius:var(--radius-sm);border:.5px solid #D4E9EA;background:var(--white);cursor:pointer;transition:var(--transition);font-size:14px;color:var(--dark);text-align:left;width:100%;font-family:var(--ff)}
+.opt:hover{border-color:var(--teal);background:var(--teal-ll)}
+.opt.selected{border-color:var(--teal);background:var(--teal-ll);color:var(--teal-d);font-weight:500}
+.opt.error{border-color:#E24B4A;animation:shake .3s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.opt-dot{width:18px;height:18px;border-radius:50%;border:1.5px solid #C4C2BC;flex-shrink:0;transition:var(--transition);display:flex;align-items:center;justify-content:center}
+.opt.selected .opt-dot{border-color:var(--teal);background:var(--teal)}
+.opt.selected .opt-dot::after{content:'';width:6px;height:6px;background:white;border-radius:50%}
+.opt-score{margin-left:auto;font-size:11px;font-weight:600;color:var(--mid);background:#F0EFEB;padding:2px 8px;border-radius:10px;flex-shrink:0;white-space:nowrap}
+.opt.selected .opt-score{background:rgba(26,155,161,.15);color:var(--teal-d)}
+
+/* ── NAV ──────────────────────────────────────────────────────── */
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:2rem;padding-top:1.25rem;border-top:.5px solid #EAE8E3}
+.btn{padding:.65rem 1.5rem;border-radius:var(--radius-sm);font-size:14px;font-weight:500;cursor:pointer;transition:var(--transition);font-family:var(--ff);border:none}
+.btn-prev{background:transparent;color:var(--mid);border:.5px solid #C4C2BC}
+.btn-prev:hover{background:var(--light);border-color:var(--mid)}
+.btn-prev:disabled{opacity:.3;cursor:default}
+.btn-next{background:var(--teal);color:var(--white);padding:.65rem 2rem}
+.btn-next:hover{background:var(--teal-d)}
+.step-dots{display:flex;gap:5px}
+.dot{width:7px;height:7px;border-radius:50%;background:#D4E9EA;transition:var(--transition)}
+.dot.done{background:var(--teal-l)}
+.dot.active{background:var(--teal);width:18px;border-radius:4px}
+
+/* ── RESULTS ──────────────────────────────────────────────────── */
+#results{display:none}
+.result-hero{background:var(--teal);border-radius:var(--radius);padding:2rem;margin-bottom:1.25rem;position:relative;overflow:hidden}
+.result-hero::after{content:'';position:absolute;bottom:-40px;right:-40px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.06)}
+.result-hero-top{display:flex;align-items:center;gap:1.5rem;margin-bottom:1rem}
+.score-circle{width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.3);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+.score-num{font-size:2rem;font-weight:600;color:var(--white);line-height:1}
+.score-label{font-size:11px;color:rgba(255,255,255,.7);margin-top:2px}
+.result-phase{font-family:var(--ff-serif);font-size:1.5rem;color:var(--white);margin-bottom:.35rem}
+.result-tagline{font-size:14px;color:rgba(255,255,255,.8);line-height:1.6}
+
+.axes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:10px;margin-bottom:1.25rem}
+.axis-card{background:var(--white);border-radius:var(--radius-sm);border:.5px solid #D4E9EA;padding:1rem}
+.axis-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
+.axis-step{font-size:11px;font-weight:600;color:var(--mid);letter-spacing:.06em;text-transform:uppercase}
+.axis-pct{font-size:14px;font-weight:600}
+.axis-bar{height:5px;background:#EAE8E3;border-radius:3px;overflow:hidden;margin-bottom:.4rem}
+.axis-fill{height:100%;border-radius:3px;transition:width .8s ease}
+.axis-name{font-size:12px;font-weight:500;color:var(--dark)}
+.axis-status{font-size:11px;margin-top:2px}
+
+/* ── RECO BOX ─────────────────────────────────────────────────── */
+.reco-card{background:var(--gold-l);border:.5px solid #D4B870;border-radius:var(--radius);padding:1.5rem;margin-bottom:1.25rem}
+.reco-head{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--gold-d);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.75rem}
+.reco-head svg{width:16px;height:16px;stroke:var(--gold);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.reco-title{font-family:var(--ff-serif);font-size:1.2rem;color:var(--dark);margin-bottom:.5rem}
+.reco-text{font-size:14px;color:var(--mid);line-height:1.7}
+.reco-offer{display:inline-flex;align-items:center;gap:6px;background:var(--gold);color:var(--white);font-size:12px;font-weight:600;padding:4px 12px;border-radius:20px;margin-top:.75rem}
+
+/* ── CTA ──────────────────────────────────────────────────────── */
+.cta-card{background:var(--dark);border-radius:var(--radius);padding:2rem;text-align:center}
+.cta-card h2{font-family:var(--ff-serif);font-size:1.5rem;color:var(--white);margin-bottom:.5rem}
+.cta-card p{font-size:14px;color:rgba(255,255,255,.7);margin-bottom:1.5rem;line-height:1.7;max-width:400px;margin-left:auto;margin-right:auto}
+.btn-cta{display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:var(--white);font-size:15px;font-weight:600;padding:.9rem 2rem;border-radius:var(--radius-sm);text-decoration:none;transition:var(--transition);border:none;cursor:pointer;font-family:var(--ff)}
+.btn-cta:hover{background:var(--teal-d);transform:translateY(-1px)}
+.btn-cta svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cta-sub{margin-top:1rem;font-size:12px;color:rgba(255,255,255,.45)}
+.btn-restart{display:inline-block;margin-top:.75rem;font-size:13px;color:rgba(255,255,255,.5);cursor:pointer;background:none;border:none;font-family:var(--ff);text-decoration:underline}
+.btn-restart:hover{color:rgba(255,255,255,.8)}
+
+/* ── FOOTER ───────────────────────────────────────────────────── */
+.site-footer{text-align:center;padding:2rem 0 0;font-size:12px;color:#AAAAAA}
+.site-footer a{color:var(--teal);text-decoration:none}
+
+/* ── RESPONSIVE ───────────────────────────────────────────────── */
+@media(max-width:480px){
+  .page-wrap{padding:1rem .75rem 3rem}
+  .hero{padding:2rem .75rem 1.75rem}
+  .step-card{padding:1.25rem}
+  .hero-meta{gap:.75rem}
+  .result-hero-top{flex-direction:column;text-align:center}
+}
+
+/* ── CAPTURE GATE ──────────────────────────────────────────── */
+.gate{background:var(--white);border-radius:var(--radius);border:.5px solid #D4E9EA;padding:2rem;box-shadow:var(--shadow);text-align:center;display:none}
+.gate.active{display:block;animation:fadeIn .3s ease}
+.gate-icon{font-size:2.5rem;margin-bottom:.75rem}
+.gate h2{font-family:var(--ff-serif);font-size:1.6rem;color:var(--dark);margin-bottom:.5rem}
+.gate p{font-size:14px;color:var(--mid);margin-bottom:1.5rem;line-height:1.7;max-width:400px;margin-left:auto;margin-right:auto}
+.gate-form{display:flex;flex-direction:column;gap:10px;max-width:380px;margin:0 auto}
+.gate-input{padding:.7rem 1rem;border-radius:var(--radius-sm);border:.5px solid #C4C2BC;font-size:14px;font-family:var(--ff);color:var(--dark);background:var(--white);outline:none;transition:border-color .15s}
+.gate-input:focus{border-color:var(--teal)}
+.gate-input::placeholder{color:#AAAAAA}
+.gate-submit{background:var(--teal);color:var(--white);border:none;border-radius:var(--radius-sm);padding:.8rem;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--ff);transition:background .15s}
+.gate-submit:hover{background:var(--teal-d)}
+.gate-submit:disabled{opacity:.6;cursor:default}
+.gate-privacy{font-size:11px;color:var(--mid);margin-top:.35rem}
+.gate-privacy a{color:var(--teal);text-decoration:none}
+.gate-error{font-size:12px;color:#A32D2D;display:none;margin-top:-.25rem}
+.gate-error.show{display:block}
+</style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="badge">
+      <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      Diagnostic gratuit · 5 minutes
+    </div>
+    <h1>Où en est vraiment<br><em>votre entreprise ?</em></h1>
+    <p>Évaluez votre maturité entrepreneuriale sur les 8 dimensions fondatrices et découvrez vos priorités d'action immédiates.</p>
+    <div class="hero-meta">
+      <span>
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        5 minutes
+      </span>
+      <span>
+        <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        24 questions
+      </span>
+      <span>
+        <svg viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        Résultats immédiats
+      </span>
+    </div>
+  </header>
+
+  <!-- QUIZ -->
+  <div id="quiz">
+
+    <!-- Progress -->
+    <div class="progress-wrap">
+      <div class="progress-top">
+        <span id="prog-label">Étape <strong>1</strong> sur 8 — Search</span>
+        <span><strong id="prog-pct">0</strong>%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+
+    <!-- S1: SEARCH -->
+    <div class="step-card active" id="step-0">
+      <div class="step-badge">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        S1 — Search
+      </div>
+      <h2 class="step-title">Rechercher & valider votre idée</h2>
+      <p class="step-sub">La clarté de votre concept et la validation de votre marché avant de construire.</p>
+      <div class="q-block">
+        <p class="q-text"><span class="q-num">1</span>Avez-vous clairement défini le problème que vous résolvez pour vos clients ?</p>
+        <div class="opts" data-q="0-0">
+          <button class="opt" data-v="0"><span class="opt-dot"></span>Non, c'est encore flou<span class="opt-score">À définir</span></button>
+          <button class="opt" data-v="1"><span class="opt-dot"></span>J'ai une idée générale, pas encore formalisée<span class="opt-score">En cours</span></button>
+          <button class="opt" data-v="2"><span class="opt-dot"></span>Oui, clairement formulé et documenté<span class="opt-score">Solide</span></button>
+        </div>
+      </div>
+      <div class="q-block">
+        <p class="q-text"><span class="q-num">2</span>Avez-vous validé votre idée auprès de vrais clients potentiels ?</p>
+        <div class="opts" data-q="0-1">
+          <button class="opt" data-v="0"><span class="opt-dot"></span>Non, je me fie à mon intuition<span class="opt-score">À définir</span></button>
+          <button class="opt" data-v="1"><span class="opt-dot"></span>Quelques échanges informels<span class="opt-score">En cours</span></button>
+          <button class="opt" data-v="2"><span class="opt-dot"></span>Oui, validation structurée avec retours concrets<span class="opt-score">Solide</span></button>
+        </div>
+      </div>
+      <div class="q-block">
+        <p class="q-text"><span class="q-num">3</span>Connaissez-vous précisément votre marché cible (taille, segments, dynamiques) ?</p>
+        <div class="opts" data-q="0-2">
+          <button class="opt" data-v="0"><span class="opt-dot"></span>Pas encore<span class="opt-score">À définir</span></button>
+          <button class="opt" data-v="1"><span class="opt-dot"></span>Je connais mon secteur mais pas les chiffres<span class="opt-score">En cours</span></button>
+          <button class="opt" data-v="2"><span class="opt-dot"></span>Oui, analyse de marché réalisée<span class="opt-score">Solide</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- S2: SUMMARIZE -->
+    <div class="step-card" id="step-1">
+      <div class="step-badge">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+        S2 — Summarize
+      </div>
+      <h2 class="step-title">Formaliser votre offre</h2>
+      <p class="step-sub">Votre capacité à exprimer clairement ce que vous faites, pour qui et pourquoi.</p>
+      <div class="q-block">
+        <p class="q-text"><span class="q-num">4</span>Pouvez-vous expliquer votre offre en 2 phrases à un inconnu ?</p>
+        <div class="opts" data-q="1-0">
+          <button class="opt" data-v="0"><span class="opt-dot"></span>Non, j'ai du mal à la résumer<span class="opt-score">À définir</span></button>
+          <button class="opt" data-v="1"><span class="opt-dot"></span>Oui mais ça manque encore de clarté<span class="opt-score">En cours</span></button>
+          <button class="opt" data-v="2"><span class="opt-dot"></span>Oui, j'ai un pitch rodé et compris de tous<span class="opt-score">Solide</span></button>
+        </div>
+      </div>
+      <div class="q-block">
+        <p class="q-text"><span class="q-num">5</span>Votre proposition de valeur est-elle documentée et partagée ?</p>
+        <div class="opts" data-q="1-1">
+          <button class="opt" data-v="0"><span class="opt-dot"></span>Non, elle existe dans ma tête<span class="opt-score">À définir</span></button>
+          <button class="opt" data-v="1"><span class="opt-dot"></span>Partiellement formalisée<span class="opt-score">En cours</span></button>
+          <button class="opt" data-v="2"><span class="opt-dot"></span>Oui, documentée et alignée avec tous<span class="opt-score">Solide</span></button>
+        </div>
+      </div>
+      <div class="q-block">
+        <p class="q-text"><span class="q-num">6</span>Avez-vous identifié vos 3 principaux avantages concurrentiels ?</p>
+        <div class="opts" data-q="1-2">
+          <button class="opt" data-v="0"><span class="opt-dot"></span>Pas vraiment<span class="opt-score">À définir</span></button>
+          <button class="opt" data-v="1"><span class="opt-dot"></span>J'en vois certains sans analyse structurée<span class="opt-score">En cours</span></button>
+          <button class="opt" data-v="2"><span class="opt-dot"></span>Oui, clairement identifiés et exploités<span class="opt-score">Solide</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- S3: SHOW -->
+    <div class="step-card" id="step-2">
+      <div class="step-badge">
+        <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+        S3 — Show
+      </div>
+      <h2 class="step-title">Démontrer le potentiel</h2>
+      <p class="step-sub">Votre capacité à prouver l'opportunité — à vous-même, à des partenaires, à des investisseurs.</p>
+      <div class="q-block">
+        <p class="q-text"><span class="q-num">7</span>Disposez-vous de données chiffrées sur la taille de votre marché ?</p>
+        <div class="opts" data-q="2-0">
+          <button class="opt" data-v="0"><span class="opt-dot"></span>Non<span class="opt-score">À définir</span></button>
+          <button class="opt" data-v="1"><span class="opt-dot"></span>Quelques données trouvées en ligne<span class="opt-score">En cours</span></button>
+          <button class="opt" data-v="2"><span class="opt-dot"></span>Oui, sources fiables et analyse réalisée<span class="opt-score">Solide</span></button>
+        </div>
+      </div>
+      <div class="q-block">
+        <p class="q-text"><span class="q-num">8</span>Avez-vous réalisé une analyse concurrentielle formelle ?</p>
+        <div class="opts" data-q="2-1">
+          <button class="opt" data-v="0"><span class="opt-dot"></span>Non<span class="opt-score">À définir</span></button>
+          <button class="opt" data-v="1"><span class="opt-dot"></span>Je connais mes concurrents sans analyse structurée<span class="opt-score">En cours</span></button>
+          <button class="opt" data-v="2"><span class="opt-dot"></span>Oui, analyse comparative documentée<span class="opt-score">Solide</span></button>
+        </div>
+      </div>
+      <div class="q-block">
+        <p class="q-text"><span class="q-num">9</span>Pouvez-vous présenter votre opportunité de façon convaincante à un tiers ?</p>
+        <div class="opts" data-q="2-2">
+          <button class="opt" data-v="0"><span class="opt-dot"></span>Non, je manque de matière<span class="opt-score">À définir</span></button>
+          <button class="opt" data-v="1"><span class="opt-dot"></span>Je peux en parler mais sans support solide<span class="opt-score">En cours</span></button>
+          <button class="opt" data-v="2"><span class="opt-dot"></span>Oui, j'ai un dossier structuré et convaincant<span class="opt-score">Solide</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- S4: STRUCTURE -->
+    <div class="step-card" id="step-3">
+      <div class="step-badge">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        S4 — Structure
+      </div>
+      <h2 class="step-title">Structurer l'entreprise</h2>
+      <p class="step-sub">L'organisation interne, les processus et la gouvernance de votre activité.</p>
+      <div class="q-block">
+        <p class="q-text"><span class="q-num">10</span>Vos processus clés (vente, livraison, service client) sont-ils documentés ?</p>
+        <div class="opts" data-q="3-0">
+          <button class="opt" data-v="0"><span class="opt-dot"></span>Non, tout est dans la tête<span class="opt-score">À définir</span></button>
+          <button class="opt" data-v="1"><span class="opt-dot"></span>Certains processus sont formalisés<span class="opt-score">En cours</span></button>
+          <button class="opt" data-v="2"><span class="opt-dot"></span>Oui, applicables sans moi<span class="opt-score">Solide</span></button>
+        </div>
+      </div>
+      <div class="q-block">
+        <p class="q-text"><span class="q-num">11</span>Avez-vous défini les rôles et responsabilités dans votre organisation ?</p>
+        <div class="opts" data-q="3-1">
+          <button class="opt" data-v="0"><span class="opt-dot"></span>Non, tout repose sur moi<span class="opt-score">À définir</span></button>
+          <button class="opt" data-v="1"><span class="opt-dot"></span>Partiellement — quelques rôles clarifiés<span class="opt-score">En cours</span></button>
+          <button class="opt" data-v="2"><span class="opt-dot"></span>Oui, organigramme clair avec responsabilités définies<span class="opt-score">Solide</span></button>
+        </div>
+      </div>
+      <div class="q-block">
+        <p class="q-text"><span class="q-num">12</span>Utilisez-vous des outils de gestion cohérents au quotidien (CRM, suivi projet) ?</p>
+        <div class="opts" data-q="3-2">
+          <button class="opt" data-v="0"><span class="opt-dot"></span>Non ou très peu<span class="opt-score">À définir</span></button>
+          <button class="opt" data-v="1"><span class="opt-dot"></span>Quelques outils mais sans cohérence<span class="opt-score">En cours</span></button>
+          <button class="opt" data-v="2"><span class="opt-dot"></span>Oui, stack cohérent et utilisé activement<span class="opt-score">Solide</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- S5: SELECT -->
+    <div class="step-card" id="step-4">
+      <div class="step-badge">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        S5 — Select
+      </div>
+      <h2 class="step-title">Cadre juridique & conformité</h2>
+      <p class="step-sub">La conformité légale, fiscale et contractuelle de votre activité.</p>
+      <div class="q-block">
+        <p class="q-text"><span class="q-num">13</span>Votre structure juridique est-elle adaptée à vos ambitions ?</p>
+        <div class="opts" data-q="4-0">
+          <button class="opt" data-v="0"><span class="opt-dot"></span>Je ne sais pas vraiment<span class="opt-score">À définir</span></button>
+          <button class="opt" data-v="1"><span class="opt-dot"></span>Peut-être, mais je n'ai pas vérifié récemment<span class="opt-score">En cours</span></button>
+          <button class="opt" data-v="2"><span class="opt-dot"></span>Oui, validée avec un professionnel<span class="opt-score">Solide</span></button>
+        </div>
+      </div>
+      <div class="q-block">
+        <p class="q-text"><span class="q-num">14</span>Vos contrats clients, fournisseurs et partenaires sont-ils formalisés ?</p>
+        <div class="opts" data-q="4-1">
+          <button class="opt" data-v="0"><span class="opt-dot"></span>Non ou très peu<span class="opt-score">À définir</span></button>
+          <button class="opt" data-v="1"><span class="opt-dot"></span>Contrats basiques sans accompagnement juridique<span class="opt-score">En cours</span></button>
+          <button class="opt" data-v="2"><span class="opt-dot"></span>Oui, rédigés ou validés par un juriste<span class="opt-score">Solide</span></button>
+        </div>
+      </div>
+      <div class="q-block">
+        <p class="q-text"><span class="q-num">15</span>Êtes-vous à jour sur vos obligations légales et fiscales ?</p>
+        <div class="opts" data-q="4-2">
+          <button class="opt" data-v="0"><span class="opt-dot"></span>Pas sûr<span class="opt-score">À définir</span></button>
+          <button class="opt" data-v="1"><span class="opt-dot"></span>Partiellement — je gère au fil de l'eau<span class="opt-score">En cours</span></button>
+          <button class="opt" data-v="2"><span class="opt-dot"></span>Oui, suivi régulier avec un expert<span class="opt-score">Solide</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- S6: SUGGEST -->
+    <div class="step-card" id="step-5">
+      <div class="step-badge">
+        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        S6 — Suggest
+      </div>
+      <h2 class="step-title">Plan financier & rentabilité</h2>
+      <p class="step-sub">La santé financière, la rentabilité et votre visibilité sur les chiffres.</p>
+      <div class="q-block">
+        <p class="q-text"><span class="q-num">16</span>Disposez-vous d'un prévisionnel financier à 12 mois ?</p>
+        <div class="opts" data-q="5-0">
+          <button class="opt" data-v="0"><span class="opt-dot"></span>Non<span class="opt-score">À définir</span></button>
+          <button class="opt" data-v="1"><span class="opt-dot"></span>Estimation approximative dans ma tête<span class="opt-score">En cours</span></button>
+          <button class="opt" data-v="2"><span class="opt-dot"></span>Oui, prévisionnel détaillé et suivi<span class="opt-score">Solide</span></button>
+        </div>
+      </div>
+      <div class="q-block">
+        <p class="q-text"><span class="q-num">17</span>Connaissez-vous votre seuil de rentabilité ?</p>
+        <div class="opts" data-q="5-1">
+          <button class="opt" data-v="0"><span class="opt-dot"></span>Non<span class="opt-score">À définir</span></button>
+          <button class="opt" data-v="1"><span class="opt-dot"></span>Approximativement<span class="opt-score">En cours</span></button>
+          <button class="opt" data-v="2"><span class="opt-dot"></span>Oui, calculé précisément<span class="opt-score">Solide</span></button>
+        </div>
+      </div>
+      <div class="q-block">
+        <p class="q-text"><span class="q-num">18</span>Avez-vous une visibilité sur votre trésorerie pour les 3 prochains mois ?</p>
+        <div class="opts" data-q="5-2">
+          <button class="opt" data-v="0"><span class="opt-dot"></span>Non, je découvre au fil de l'eau<span class="opt-score">À définir</span></button>
+          <button class="opt" data-v="1"><span class="opt-dot"></span>Je surveille mais sans outil formel<span class="opt-score">En cours</span></button>
+          <button class="opt" data-v="2"><span class="opt-dot"></span>Oui, tableau de trésorerie à jour<span class="opt-score">Solide</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- S7: SET UP -->
+    <div class="step-card" id="step-6">
+      <div class="step-badge">
+        <svg viewBox="0 0 24 24"><path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/></svg>
+        S7 — Set up
+      </div>
+      <h2 class="step-title">Business plan & stratégie</h2>
+      <p class="step-sub">La stratégie formalisée, le plan d'action et la vision à moyen terme.</p>
+      <div class="q-block">
+        <p class="q-text"><span class="q-num">19</span>Disposez-vous d'un plan stratégique formalisé pour les 12 à 24 prochains mois ?</p>
+        <div class="opts" data-q="6-0">
+          <button class="opt" data-v="0"><span class="opt-dot"></span>Non<span class="opt-score">À définir</span></button>
+          <button class="opt" data-v="1"><span class="opt-dot"></span>Quelques notes mais rien de formalisé<span class="opt-score">En cours</span></button>
+          <button class="opt" data-v="2"><span class="opt-dot"></span>Oui, document structuré et mis à jour régulièrement<span class="opt-score">Solide</span></button>
+        </div>
+      </div>
+      <div class="q-block">
+        <p class="q-text"><span class="q-num">20</span>Vos objectifs sont-ils SMART (Spécifiques, Mesurables, Réalistes, Temporels) ?</p>
+        <div class="opts" data-q="6-1">
+          <button class="opt" data-v="0"><span class="opt-dot"></span>Non, ils restent très généraux<span class="opt-score">À définir</span></button>
+          <button class="opt" data-v="1"><span class="opt-dot"></span>Partiellement<span class="opt-score">En cours</span></button>
+          <button class="opt" data-v="2"><span class="opt-dot"></span>Oui, objectifs précis avec jalons définis<span class="opt-score">Solide</span></button>
+        </div>
+      </div>
+      <div class="q-block">
+        <p class="q-text"><span class="q-num">21</span>Avez-vous une roadmap opérationnelle avec responsables et échéances ?</p>
+        <div class="opts" data-q="6-2">
+          <button class="opt" data-v="0"><span class="opt-dot"></span>Non<span class="opt-score">À définir</span></button>
+          <button class="opt" data-v="1"><span class="opt-dot"></span>Une liste de to-do sans vraie priorisation<span class="opt-score">En cours</span></button>
+          <button class="opt" data-v="2"><span class="opt-dot"></span>Oui, roadmap avec priorités, dates et responsables<span class="opt-score">Solide</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- S8: START -->
+    <div class="step-card" id="step-7">
+      <div class="step-badge">
+        <svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z"/></svg>
+        S8 — Start
+      </div>
+      <h2 class="step-title">Exécution & pilotage</h2>
+      <p class="step-sub">La capacité à exécuter, à vous adapter et à tenir le cap dans la durée.</p>
+      <div class="q-block">
+        <p class="q-text"><span class="q-num">22</span>Avez-vous des clients payants et des revenus stables aujourd'hui ?</p>
+        <div class="opts" data-q="7-0">
+          <button class="opt" data-v="0"><span class="opt-dot"></span>Non encore<span class="opt-score">À définir</span></button>
+          <button class="opt" data-v="1"><span class="opt-dot"></span>Quelques clients mais irréguliers<span class="opt-score">En cours</span></button>
+          <button class="opt" data-v="2"><span class="opt-dot"></span>Oui, base clients stable avec revenus récurrents<span class="opt-score">Solide</span></button>
+        </div>
+      </div>
+      <div class="q-block">
+        <p class="q-text"><span class="q-num">23</span>Suivez-vous des indicateurs de performance (KPIs) régulièrement ?</p>
+        <div class="opts" data-q="7-1">
+          <button class="opt" data-v="0"><span class="opt-dot"></span>Non<span class="opt-score">À définir</span></button>
+          <button class="opt" data-v="1"><span class="opt-dot"></span>Quelques métriques sans tableau de bord<span class="opt-score">En cours</span></button>
+          <button class="opt" data-v="2"><span class="opt-dot"></span>Oui, KPIs définis et revus chaque mois<span class="opt-score">Solide</span></button>
+        </div>
+      </div>
+      <div class="q-block">
+        <p class="q-text"><span class="q-num">24</span>Votre activité peut-elle fonctionner sans vous pendant 2 semaines ?</p>
+        <div class="opts" data-q="7-2">
+          <button class="opt" data-v="0"><span class="opt-dot"></span>Non, je suis indispensable à tout<span class="opt-score">À définir</span></button>
+          <button class="opt" data-v="1"><span class="opt-dot"></span>Partiellement — certaines choses continueraient<span class="opt-score">En cours</span></button>
+          <button class="opt" data-v="2"><span class="opt-dot"></span>Oui, l'entreprise tourne avec mon équipe<span class="opt-score">Solide</span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- NAV -->
+    <div class="nav">
+      <button class="btn btn-prev" id="btn-prev" onclick="navigate(-1)" disabled>← Précédent</button>
+      <div class="step-dots" id="dots"></div>
+      <button class="btn btn-next" id="btn-next" onclick="navigate(1)">Suivant →</button>
+    </div>
+
+  </div><!-- /quiz -->
+
+
+  <!-- CAPTURE GATE — shown between quiz completion and results -->
+  <div id="gate" class="gate">
+    <div class="gate-icon">🎯</div>
+    <h2>Votre diagnostic est prêt !</h2>
+    <p>Entrez votre prénom et votre email pour recevoir vos résultats complets et une recommandation personnalisée.</p>
+    <form class="gate-form" id="gate-form" onsubmit="submitGate(event)">
+      <input class="gate-input" id="gate-name" type="text" placeholder="Votre prénom" required autocomplete="given-name">
+      <input class="gate-input" id="gate-email" type="email" placeholder="Votre email professionnel" required autocomplete="email">
+      <div class="gate-error" id="gate-error">Merci de remplir tous les champs correctement.</div>
+      <button class="gate-submit" id="gate-btn" type="submit">
+        Voir mes résultats →
+      </button>
+      <p class="gate-privacy">🔒 Vos données sont confidentielles. Pas de spam — uniquement votre diagnostic et nos ressources pour dirigeants.</p>
+    </form>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results">
+    <div class="result-hero">
+      <div class="result-hero-top">
+        <div class="score-circle">
+          <div class="score-num" id="r-score">—</div>
+          <div class="score-label">Score global</div>
+        </div>
+        <div>
+          <div class="result-phase" id="r-phase">—</div>
+          <div class="result-tagline" id="r-tagline">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="axes-grid" id="axes-grid"></div>
+
+    <div class="reco-card">
+      <div class="reco-head">
+        <svg viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 8v4M12 16h.01"/></svg>
+        Recommandation personnalisée
+      </div>
+      <h3 class="reco-title" id="r-reco-title">—</h3>
+      <p class="reco-text" id="r-reco-text">—</p>
+      <div class="reco-offer" id="r-offer">—</div>
+    </div>
+
+    <div class="cta-card">
+      <h2>Passez à l'action maintenant</h2>
+      <p>Votre diagnostic est prêt. Un expert 8S2Business analyse vos résultats avec vous en 30 minutes et vous propose un plan d'action concret, adapté à votre situation.</p>
+      <!-- ✏️ REMPLACEZ CE LIEN PAR VOTRE URL CALENDLY -->
+      <a class="btn-cta" href="https://scheduler.zoom.us/st-phane-laure-caubet-phd/30-mins-with-st-phane-laure" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Prendre rendez-vous — c'est gratuit
+      </a>
+      <div class="cta-sub">Rendez-vous de 30 min · Sans engagement · 100% en ligne</div>
+      <button class="btn-restart" onclick="restart()">Recommencer le diagnostic</button>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <p>© 2025 <a href="https://www.8s2business.com" target="_blank">8S2Business</a> · <em>"The steps to build your business"</em></p>
+  </footer>
+
+</div><!-- /page-wrap -->
+
+<script>
+const STEPS=8;
+const LABELS=["Search","Summarize","Show","Structure","Select","Suggest","Set up","Start"];
+const AXIS_DESC=["Clarté et validation de l'idée","Formalisation de l'offre","Démonstration du potentiel marché","Organisation et processus","Cadre juridique et conformité","Santé et visibilité financière","Stratégie et plan d'action","Exécution, KPIs et autonomie"];
+const answers={};
+let current=0;
+
+// Build dots
+const dotsEl=document.getElementById('dots');
+for(let i=0;i<STEPS;i++){const d=document.createElement('div');d.className='dot'+(i===0?' active':'');d.id='dot-'+i;dotsEl.appendChild(d);}
+
+function updateProgress(){
+  const pct=Math.round((current/STEPS)*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-pct').textContent=pct;
+  document.getElementById('prog-label').innerHTML='Étape <strong>'+(current+1)+'</strong> sur '+STEPS+' — '+LABELS[current];
+  document.getElementById('btn-prev').disabled=current===0;
+  const isLast=current===STEPS-1;
+  document.getElementById('btn-next').textContent=isLast?'Voir mes résultats →':'Suivant →';
+  for(let i=0;i<STEPS;i++){
+    const d=document.getElementById('dot-'+i);
+    d.className='dot'+(i<current?' done':i===current?' active':'');
+  }
+}
+
+function stepComplete(s){
+  for(let q=0;q<3;q++){if(answers[s+'-'+q]===undefined)return false;}
+  return true;
+}
+
+function navigate(dir){
+  if(dir===1&&!stepComplete(current)){
+    document.querySelectorAll('#step-'+current+' .opts').forEach(g=>{
+      const key=g.dataset.q;
+      if(answers[key]===undefined){g.querySelectorAll('.opt').forEach(o=>{o.classList.add('error');setTimeout(()=>o.classList.remove('error'),400);});}
+    });
+    return;
+  }
+  if(dir===1&&current===STEPS-1){showResults();return;}
+  document.getElementById('step-'+current).classList.remove('active');
+  current=Math.max(0,Math.min(STEPS-1,current+dir));
+  document.getElementById('step-'+current).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  updateProgress();
+}
+
+document.querySelectorAll('.opts').forEach(group=>{
+  group.querySelectorAll('.opt').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const key=group.dataset.q;
+      group.querySelectorAll('.opt').forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+      answers[key]=parseInt(btn.dataset.v);
+    });
+  });
+});
+
+function getScore(s){
+  let t=0;for(let q=0;q<3;q++){t+=answers[s+'-'+q]||0;}
+  return Math.round((t/6)*100);
+}
+
+// Store scores globally for use after gate submission
+let _pendingScores = [];
+let _pendingGlobal = 0;
+
+function showResults(){
+  // Calculate scores first
+  const scores=[];
+  for(let s=0;s<STEPS;s++)scores.push(getScore(s));
+  const global=Math.round(scores.reduce((a,b)=>a+b,0)/STEPS);
+  _pendingScores = scores;
+  _pendingGlobal = global;
+
+  // Show capture gate instead of results directly
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('gate').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function submitGate(e){
+  e.preventDefault();
+  const name  = document.getElementById('gate-name').value.trim();
+  const email = document.getElementById('gate-email').value.trim();
+  const errEl = document.getElementById('gate-error');
+  const btn   = document.getElementById('gate-btn');
+
+  if(!name || !email){ errEl.classList.add('show'); return; }
+  errEl.classList.remove('show');
+
+  // Disable button to prevent double submit
+  btn.disabled = true;
+  btn.textContent = 'Chargement…';
+
+  // Calculate phase, recommendation and offer for email
+  const global = _pendingGlobal;
+  let phase, recoTitle, recoText, offer;
+  if(global<34){
+    phase     = `Phase Fondation (${global}%)`;
+    recoTitle = `Clarifiez et structurez avant tout.`;
+    recoText  = `Votre entreprise est en phase de construction. L'urgence est de clarifier votre offre, valider votre marche et securiser vos fondations juridiques et financieres. Un accompagnement methode vous fera gagner des mois.`;
+    offer     = `Autonomie ou Groupe - Fondation (a partir de 290 EUR)`;
+  } else if(global<67){
+    phase     = `Phase Acceleration (${global}%)`;
+    recoTitle = `Debloquez votre prochain palier de croissance.`;
+    recoText  = `Vous avez pose des bases, mais des zones de fragilite freinent votre croissance. Concentrez-vous sur vos scores les plus faibles - souvent Structure, Suggest ou Set up. Le bon accompagnement vous fera passer du mode reactif au mode strategique.`;
+    offer     = `Groupe ou Individuel - Acceleration (a partir de 1900 EUR)`;
+  } else {
+    phase     = `Phase Scale (${global}%)`;
+    recoTitle = `Passez au niveau superieur sans tout porter seul.`;
+    recoText  = `Votre entreprise est mature. Les derniers leviers sont l'autonomisation de votre organisation et la vision long terme. Un bras droit strategique vous aidera a franchir ce cap sans perdre de temps.`;
+    offer     = `Individuel Scale ou Bras-Droit Maintenance Strategy (a partir de 1990 EUR/mois)`;
+  }
+
+  // Build scores detail string
+  const scoresDetail = LABELS.map((l,i)=>`${l}: ${_pendingScores[i]}%`).join(' | ');
+
+  // Build weak axes (score < 50%)
+  const weakAxes = LABELS.filter((l,i)=>_pendingScores[i]<50).join(', ') || 'Aucun - profil solide';
+
+  // Send to Formspree
+  fetch('https://formspree.io/f/mojrrzqd', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({
+      prenom:                 name,
+      email:                  email,
+      score_global:           global + '%',
+      phase_detectee:         phase,
+      titre_recommandation:   recoTitle,
+      recommandation:         recoText,
+      formule_recommandee:    offer,
+      axes_prioritaires:      weakAxes,
+      detail_8_scores:        scoresDetail,
+      _subject: '🎯 Nouveau diagnostic 8S - ' + name + ' | ' + phase,
+      _replyto: email
+    })
+  })
+  .then(r => r.json())
+  .then(data => {
+    // Whether Formspree succeeds or fails, show results (don't block the user)
+    revealResults();
+  })
+  .catch(() => {
+    revealResults();
+  });
+}
+
+function revealResults(){
+  document.getElementById('gate').classList.remove('active');
+  document.getElementById('gate').style.display='none';
+  document.getElementById('results').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+  const scores = _pendingScores;
+  const global  = _pendingGlobal;
+  document.getElementById('r-score').textContent=global+'%';
+
+  let phase,tagline,recoTitle,recoText,offer;
+  if(global<34){
+    phase=`Phase Fondation`;tagline=`Priorité : poser des bases solides avant d'accélérer.`;
+    recoTitle=`Clarifiez et structurez avant tout.`;
+    recoText=`Votre entreprise est en phase de construction. L'urgence est de clarifier votre offre, valider votre marché et sécuriser vos fondations juridiques et financières. Un accompagnement méthode vous fera gagner des mois.`;
+    offer=`Formule recommandée · Autonomie ou Groupe — Fondation`;
+  }else if(global<67){
+    phase=`Phase Accélération`;tagline=`Priorité : optimiser ce qui marche et éliminer les frictions.`;
+    recoTitle=`Débloquez votre prochain palier de croissance.`;
+    recoText=`Vous avez posé des bases, mais des zones de fragilité freinent votre croissance. Concentrez-vous sur vos scores les plus faibles — souvent Structure, Suggest ou Set up. Le bon accompagnement vous fera passer du mode réactif au mode stratégique.`;
+    offer=`Formule recommandée · Groupe ou Individuel — Accélération`;
+  }else{
+    phase=`Phase Scale`;tagline=`Priorité : déléguer, automatiser et changer de dimension.`;
+    recoTitle=`Passez au niveau supérieur sans tout porter seul.`;
+    recoText=`Votre entreprise est mature. Les derniers leviers sont l'autonomisation de votre organisation et la vision long terme. Un bras droit stratégique vous aidera à franchir ce cap sans perdre de temps.`;
+    offer=`Formule recommandée · Individuel Scale ou Bras-Droit`;
+  }
+
+  document.getElementById('r-phase').textContent=phase;
+  document.getElementById('r-tagline').textContent=tagline;
+  document.getElementById('r-reco-title').textContent=recoTitle;
+  document.getElementById('r-reco-text').textContent=recoText;
+  document.getElementById('r-offer').textContent=offer;
+
+  const grid=document.getElementById('axes-grid');grid.innerHTML='';
+  scores.forEach((sc,i)=>{
+    const color=sc>=67?'#0F6E56':sc>=34?'#B8913A':'#A32D2D';
+    const lbl=sc>=67?'Solide ✓':sc>=34?'À renforcer':'Prioritaire ⚡';
+    grid.innerHTML+=`<div class="axis-card">
+      <div class="axis-top"><span class="axis-step">S${i+1} — ${LABELS[i]}</span><span class="axis-pct" style="color:${color}">${sc}%</span></div>
+      <div class="axis-bar"><div class="axis-fill" style="width:${sc}%;background:${color}"></div></div>
+      <div class="axis-name">${AXIS_DESC[i]}</div>
+      <div class="axis-status" style="color:${color};font-size:11px;font-weight:500;margin-top:3px">${lbl}</div>
+    </div>`;
+  });
+}
+
+function restart(){
+  Object.keys(answers).forEach(k=>delete answers[k]);
+  current=0;
+  document.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+  document.querySelectorAll('.step-card').forEach(s=>s.classList.remove('active'));
+  document.getElementById('step-0').classList.add('active');
+  document.getElementById('quiz').style.display='block';
+  document.getElementById('results').style.display='none';
+  window.scrollTo({top:0,behavior:'smooth'});
+  updateProgress();
+}
+
+updateProgress();
+</script>
+</body>
+</html>
